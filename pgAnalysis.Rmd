@@ -1,0 +1,41 @@
+---
+title: "Perfect Game Data Analysis"
+output: html_notebook
+---
+The following data analysis will regard current or past Major League Baseball players who debuted in 2013-2015. The dataset was scraped using Python/Selenium from a significant scouting website: perfectgame.org
+```{r}
+setwd("~/Desktop/baseball/")
+pgData <- read.csv(file = "pg_debut1315.csv")
+print(head(pgData))
+```
+```{r}
+weight <- as.vector(pgData[,3])
+fastballVelo <- as.vector(pgData[,7])
+#taking out the "N/A" values
+#fastballVelo <- as.numeric(fastballVelo)
+fastballVelo <- suppressWarnings(na.omit(fastballVelo))
+weight <- suppressWarnings(na.omit(weight))
+plot(weight, fastballVelo)
+title(main = "Fastball Velocity based off of Weight")
+```
+```{r}
+fastballVelo <- as.numeric(as.vector(pgData$FB.Velo))
+pgGrade <- as.numeric(as.vector(pgData$PG.Grade))
+plot(fastballVelo, pgGrade)
+title(main = "Perfect Game Grade based off of Fastball Velocity")
+abline(lm(pgGrade ~ fastballVelo), col = "blue", lwd = 2)
+fit = lm(pgGrade ~ fastballVelo)
+summary(fit)
+```
+The previous analysis says that with every MPH that you can add to your FB Velocity, your Perfect Game grade will rise  0.10972 points, with a formula of roughly: y =  0.10972x - 0.35751
+```{r}
+sixtyTime <- as.numeric(as.vector(pgData$X60.Time))
+pgGrade <- as.numeric(as.vector(pgData$PG.Grade))
+plot(sixtyTime, pgGrade)
+title(main = "Perfect Game Grade based off of Sixty Time")
+abline(lm(pgGrade ~ sixtyTime), col = "blue", lwd = 2)
+fit = lm(pgGrade ~ sixtyTime)
+summary(fit)
+```
+The previous analysis says that with every 0.1 second that you can take off your 60 time, your Perfect Game grade will rise 0.14761 points, with a formula of roughly: y = -1.4761x + 19.6443
+
